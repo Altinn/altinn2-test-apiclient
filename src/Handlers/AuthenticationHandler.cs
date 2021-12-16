@@ -14,12 +14,14 @@ namespace Altinn.TestClient.Handlers
 {
     public class AuthenticationHandler
     {
+        private readonly string _clientId;
         private readonly string _username;
         private readonly string _password;
         private readonly string _certificateThumbprint;
 
-        public AuthenticationHandler(string username, string password, string certificateThumbprint)
+        public AuthenticationHandler(string clientId, string username, string password, string certificateThumbprint)
         {
+            _clientId = clientId;
             _username = username;
             _password = password;
             _certificateThumbprint = certificateThumbprint;
@@ -103,7 +105,7 @@ namespace Altinn.TestClient.Handlers
             return certificate;
         }
 
-        private static string GetJwtAssertion(X509Certificate2 certificate)
+        private string GetJwtAssertion(X509Certificate2 certificate)
         {
             X509SecurityKey securityKey = new X509SecurityKey(certificate);
             List<string> certificateChain = new List<string>() { Convert.ToBase64String(certificate.GetRawCertData()) };
@@ -124,14 +126,13 @@ namespace Altinn.TestClient.Handlers
             // This value is chosen to make debugging more lenient.
             long issuedAt = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             long expirationTime = issuedAt + 120;
-            string clientId = "d395043f-19de-48f7-9ea7-9e38c96b5472";
 
             JwtPayload body = new JwtPayload
             {
                 { "aud", "https://ver2.maskinporten.no/" },
                 { "resource", "https://tt02.altinn.no" }, 
                 { "scope", "altinn:enduser" },
-                { "iss", clientId },
+                { "iss", _clientId },
                 { "exp", expirationTime },
                 { "iat", issuedAt },
                 { "jti", Guid.NewGuid().ToString() },

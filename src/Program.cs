@@ -67,11 +67,12 @@ namespace Altinn.TestClient.Program
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var authenticationHandler = new AuthenticationHandler(
-                _config["EnterpriseUser:Username"], 
-                _config["EnterpriseUser:Password"], 
+                _config["Maskinporten:ClientId"],
+                _config["Altinn:EnterpriseUser:Username"], 
+                _config["ALtinn:EnterpriseUser:Password"], 
                 _config["Certificate:Thumbprint"]);
-            var reporteeHandler = new ReporteeHandler(_config["ApiKey"]);
-            var authorizationHandler = new AuthorizationHandler(_config["ApiKey"]);
+            var reporteeHandler = new ReporteeHandler(_config["Altinn:ApiKey"]);
+            var authorizationHandler = new AuthorizationHandler(_config["Altinn:ApiKey"]);
 
             Person testperson = TT02.GetTestPersons()[0];
             Service testservice = TT02.GetServiceCodes()[0];
